@@ -1,46 +1,48 @@
-# 32-bit 5-Stage Pipelined RISC (DLX) Processor
+# 32-bit DLX RISC Processor (RTL-to-GDSII)
 
-> **Note:** Due to academic policy, the VHDL source code for this project is not public. This repository documents the architecture, design flow, and final implementation results.
+This repository documents the end-to-end ASIC implementation of a **5-stage pipelined RISC processor**, developed from RTL specifications down to the final physical layout (GDSII).
 
-This project, completed for the Microelectronic Systems course at Politecnico di Torino, involved the top-down design and implementation of a 32-bit, 5-stage pipelined RISC (DLX) processor, from RTL design in VHDL to post-routing physical layout.
+The project focuses on the **Physical Design** flow, achieving timing closure and optimizing for area/power using industry-standard EDA tools.
 
----
+## 📸 Final Layout Visualization (Cadence Innovus)
+The physical implementation was split into the main functional blocks to optimize placement and routing.
 
-## Core Design Flow & Tools
+| **Datapath (DP)** | **Control Unit (CU)** |
+| :---: | :---: |
+| ![Datapath Layout](images/dlx_dp_gif.png) | ![Control Unit Layout](images/dlx_cu_gif.png) |
+| *Layout of the 5-stage Datapath* | *Layout of the Hardwired Control Unit* |
 
-The entire RTL-to-GDS flow was implemented using industry-standard EDA tools:
 
-1.  **RTL Simulation & Verification:**
-    * Used **Questa Sim** to verify the functional correctness of the VHDL modules.
-    * Testbenches covered data hazards (stalls), forwarding logic, and branch handling.
+## 🛠️ Design Flow & EDA Stack
+The implementation followed a rigorous ASIC flow:
 
-2.  **Synthesis (RTL-to-Gate):**
-    *  Used **Synopsys Design Compiler** to synthesize the design from VHDL into a gate-level netlist.
-    *  The process was optimized for timing, power, and area under multiple clock constraints.
-
+1.  **RTL Design & Verification:**
+    * **Language:** VHDL (Structural & Behavioral).
+    * **Architecture:** 5-Stage Pipeline (Fetch, Decode, Execute, Memory, Write-Back).
+    * **Hazards:** Handled via Forwarding Unit and Hazard Detection Unit (Stalling).
+    * **Tool:** Siemens QuestaSim.
+2.  **Logic Synthesis:**
+    * **Constraints:** Optimized for Timing (WNS) and Area.
+    * **Tool:** Synopsys Design Compiler.
 3.  **Physical Design (P&R):**
-    *  Used **Cadence Innovus** for the complete physical implementation flow.
-    *  This included floorplanning, power planning, placement, Clock Tree Synthesis (CTS), and final routing.
+    * **Steps:** Floorplanning, Power Ring/Stripe planning, Placement, Clock Tree Synthesis (CTS), Routing, DRC/LVS.
+    * **Tool:** Cadence Innovus.
+
+## 📊 Key Metrics & Results
+Achieved full timing closure with positive slack under the target clock frequency.
+
+| Metric | Value | Notes |
+| :--- | :--- | :--- |
+| **Technology Node** | 45nm (Nangate Open Cell Library) |
+| **Frequency** | 307.69 MHz |
+| **Worst Negative Slack (WNS)** | **0.917 ns** | **TIMING MET** (Setup Clean) |
+| **Pipeline Stages** | 5 | With Forwarding logic |
+
+## 📄 Documentation
+Detailed analysis of the datapath, control unit FSM, and physical constraints can be found in the technical report.
+
+* [**View Full Technical Report (PDF)**](DLX_Complete_Report.pdf)
+* [**View Presentation Slides (PDF)**](DLX_Presentation.pdf)
 
 ---
-
-## Key Results
-
-The design successfully met all performance targets after full implementation.
-
-* **Final Layout:** 
-
-    **Control unit**
-![Control Unit Final Layout](images/dlx_cu_gif.png)
-    **Datapath**
-![Datapath Final Layout](images/dlx_dp_gif.png)
-
-* **Timing Closure:** Achieved final timing closure post-routing, meeting all setup and hold constraints. 
-    * **Worst Negative Slack (WNS): 0.917 ns** (This positive value confirms all setup timing was met).
-
-## Project Documentation & Results
-
-For a complete analysis of the architecture, design choices, verification strategy, and in-depth synthesis/P&R results, see the full technical report. The presentation slides provide a high-level summary.
-
-* [**View the Full Technical Report (DLX_Complete_Report.pdf)**](./DLX_Complete_Report.pdf)
-* [**View the Final Presentation (DLX_Presentation.pdf)**](./DLX_Presentation.pdf)
+> *Note: Due to academic policy regarding the "Microelectronic Systems" course at Politecnico di Torino, the raw VHDL source code is not publicly available in this repository. This portfolio demonstrates the design methodology, flow proficiency, and final physical results.*
